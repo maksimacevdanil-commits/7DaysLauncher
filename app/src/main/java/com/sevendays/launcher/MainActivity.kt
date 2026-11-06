@@ -4,6 +4,8 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.BitmapFactory
+import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -43,10 +45,15 @@ class MainActivity : Activity() {
         val page = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             setPadding(18, 8, 18, 8)
-            background = android.graphics.drawable.GradientDrawable(
-                android.graphics.drawable.GradientDrawable.Orientation.TL_BR,
-                intArrayOf(Color.rgb(13, 16, 17), Color.rgb(58, 42, 34), Color.rgb(12, 14, 15))
-            )
+            background = try {
+                val bitmap = assets.open("launcher_bg.jpg").use { BitmapFactory.decodeStream(it) }
+                BitmapDrawable(resources, bitmap).apply { gravity = Gravity.FILL }
+            } catch (_: Exception) {
+                android.graphics.drawable.GradientDrawable(
+                    android.graphics.drawable.GradientDrawable.Orientation.TL_BR,
+                    intArrayOf(Color.rgb(13, 16, 17), Color.rgb(58, 42, 34), Color.rgb(12, 14, 15))
+                )
+            }
         }
 
         val top = LinearLayout(this).apply {
