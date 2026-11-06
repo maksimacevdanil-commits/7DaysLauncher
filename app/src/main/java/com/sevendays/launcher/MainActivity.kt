@@ -79,6 +79,7 @@ class MainActivity : Activity() {
         })
         left.addView(label("THE SURVIVAL HORDE CRAFTING GAME", 11f, Color.rgb(230, 50, 38)))
         left.addView(label("Выживайте. Стройте. Защищайтесь.\nПобеждайте орды зомби!", 17f, Color.WHITE))
+        left.addView(makeButton("ВЫБРАТЬ ПАПКУ ИГРЫ", ::chooseFolder).apply { textSize = 14f }, LinearLayout.LayoutParams(-1, 48).apply { setMargins(0, 12, 0, 4) })
         val spacer = TextView(this)
         left.addView(spacer, LinearLayout.LayoutParams(-1, 0, 1f))
         play = makeButton("ИГРАТЬ  ❯", ::onPlayPressed).apply {
