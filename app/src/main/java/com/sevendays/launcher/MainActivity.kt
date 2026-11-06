@@ -35,58 +35,105 @@ class MainActivity : Activity() {
     }
 
     private fun buildUi() {
+        window.decorView.systemUiVisibility = (
+            android.view.View.SYSTEM_UI_FLAG_FULLSCREEN or
+            android.view.View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
+            android.view.View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+        )
         val page = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
-            setPadding(22, 12, 22, 12)
-            setBackgroundColor(bg)
+            setPadding(18, 8, 18, 8)
+            background = android.graphics.drawable.GradientDrawable(
+                android.graphics.drawable.GradientDrawable.Orientation.TL_BR,
+                intArrayOf(Color.rgb(13, 16, 17), Color.rgb(58, 42, 34), Color.rgb(12, 14, 15))
+            )
         }
-        val header = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL }
-        header.addView(label("7 DAYS TO DIE", 26f, Color.WHITE), LinearLayout.LayoutParams(0, 58, 1f))
-        header.addView(label("ANDROID EDITION  •  0.3.0", 11f, Color.LTGRAY))
-        page.addView(header)
 
-        val nav = LinearLayout(this).apply { gravity = Gravity.CENTER; setBackgroundColor(panel) }
-        nav.addView(navButton("СЕТЬ") { showInfo("Сетевая игра", "Сетевой режим пока не реализован в лаунчере.") })
-        nav.addView(navButton("УПРАВЛЕНИЕ") { showControls() })
-        nav.addView(navButton("ГРАФИКА") { showGraphics() })
-        nav.addView(navButton("НАСТРОЙКИ") { showSettings() })
-        page.addView(nav, LinearLayout.LayoutParams(-1, 48))
-
-        page.addView(label("SURVIVE THE NIGHT", 19f, Color.rgb(205, 105, 72)).apply {
-            gravity = Gravity.CENTER
-        }, LinearLayout.LayoutParams(-1, 48))
-
-        val statusPanel = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            setPadding(14, 10, 14, 10)
-            setBackgroundColor(panel)
+        val top = LinearLayout(this).apply {
+            gravity = Gravity.CENTER_VERTICAL
+            setBackgroundColor(Color.argb(135, 10, 10, 10))
         }
-        status = label("СТАТУС: ПАПКА ИГРЫ НЕ ВЫБРАНА", 15f, Color.WHITE)
-        details = label("Выбери каталог установленной PC-версии игры. Лаунчер проверит структуру файлов.", 13f, Color.LTGRAY)
-        statusPanel.addView(status)
-        statusPanel.addView(details, LinearLayout.LayoutParams(-1, 0, 1f))
-        page.addView(statusPanel, LinearLayout.LayoutParams(-1, 0, 1f).apply { setMargins(0, 8, 0, 8) })
+        top.addView(navButton("◎  СЕТЕВАЯ ИГРА") {
+            showInfo("Сетевая игра", "Сетевой режим пока недоступен.")
+        }, LinearLayout.LayoutParams(0, 48, 1f))
+        top.addView(navButton("🎮  УПРАВЛЕНИЕ") { showControls() }, LinearLayout.LayoutParams(0, 48, 1f))
+        top.addView(navButton("▣  ГРАФИКА") { showGraphics() }, LinearLayout.LayoutParams(0, 48, 1f))
+        top.addView(navButton("⚙  НАСТРОЙКИ") { showSettings() }, LinearLayout.LayoutParams(0, 48, 1f))
+        top.addView(navButton("⏻  ВЫХОД") { finish() }, LinearLayout.LayoutParams(0, 48, 1f))
+        page.addView(top)
 
-        val actions = LinearLayout(this).apply { gravity = Gravity.CENTER }
-        actions.addView(makeButton("ВЫБРАТЬ ПАПКУ") { chooseFolder() }, LinearLayout.LayoutParams(0, 52, 1f).apply { setMargins(3, 0, 3, 0) })
-        play = makeButton("ИГРАТЬ") { onPlayPressed() }
-        play.isEnabled = false
-        play.alpha = 0.45f
-        actions.addView(play, LinearLayout.LayoutParams(0, 52, 1f).apply { setMargins(3, 0, 3, 0) })
-        actions.addView(makeButton("ЖУРНАЛ") { showLog() }, LinearLayout.LayoutParams(0, 52, 1f).apply { setMargins(3, 0, 3, 0) })
-        page.addView(actions)
-
-        val bottom = LinearLayout(this).apply { gravity = Gravity.CENTER }
-        bottom.addView(navButton("КАМПАНИЯ") { showInfo("Кампания", "Этот раздел станет доступен после интеграции игрового runtime.") })
-        bottom.addView(navButton("КРАФТ") { showInfo("Крафт", "Игровые меню пока не подключены.") })
-        bottom.addView(navButton("МОДЫ") { showInfo("Моды", "Менеджер модификаций появится в следующей версии.") })
-        page.addView(bottom, LinearLayout.LayoutParams(-1, 42))
-        page.addView(label("PC GAME RUNTIME: НЕ ПОДКЛЮЧЁН  •  ФАЙЛЫ НЕ ИЗМЕНЯЮТСЯ", 10f, Color.GRAY).apply {
-            gravity = Gravity.CENTER
+        val hero = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            setPadding(4, 8, 4, 8)
+        }
+        val left = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
+        left.addView(label("7 DAYS TO DIE", 37f, Color.WHITE).apply {
+            typeface = android.graphics.Typeface.create("sans-serif-condensed", android.graphics.Typeface.BOLD)
         })
-        val scroll = ScrollView(this)
-        scroll.addView(page)
-        setContentView(scroll)
+        left.addView(label("THE SURVIVAL HORDE CRAFTING GAME", 11f, Color.rgb(230, 50, 38)))
+        left.addView(label("Выживайте. Стройте. Защищайтесь.\nПобеждайте орды зомби!", 17f, Color.WHITE))
+        val spacer = TextView(this)
+        left.addView(spacer, LinearLayout.LayoutParams(-1, 0, 1f))
+        play = makeButton("ИГРАТЬ  ❯", ::onPlayPressed).apply {
+            textSize = 27f
+            setBackgroundColor(Color.rgb(190, 12, 8))
+            isEnabled = false
+            alpha = 0.65f
+        }
+        left.addView(play, LinearLayout.LayoutParams(-1, 66).apply { setMargins(0, 8, 0, 8) })
+        left.addView(label("VULKAN / OPENGL ES", 12f, Color.LTGRAY))
+        hero.addView(left, LinearLayout.LayoutParams(0, -1, 1.35f))
+
+        val right = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(14, 12, 14, 12)
+            background = android.graphics.drawable.GradientDrawable().apply {
+                setColor(Color.argb(220, 12, 12, 12))
+                setStroke(2, Color.rgb(145, 45, 35))
+                cornerRadius = 18f
+            }
+        }
+        right.addView(label("СТАТУС", 22f, Color.WHITE))
+        status = label("Эмулятор: НЕ ГОТОВ", 14f, Color.rgb(140, 220, 70))
+        details = label("Игра: 7 Days to Die\nAPI: Vulkan / OpenGL ES\n\nВыбери папку игры для проверки.", 13f, Color.WHITE)
+        right.addView(status)
+        right.addView(details, LinearLayout.LayoutParams(-1, 0, 1f))
+        right.addView(label("RUNTIME НЕ ПОДКЛЮЧЁН", 11f, Color.rgb(255, 90, 70)))
+        hero.addView(right, LinearLayout.LayoutParams(0, -1, 0.78f).apply { setMargins(10, 6, 0, 6) })
+        page.addView(hero, LinearLayout.LayoutParams(-1, 0, 1f))
+
+        val cards = LinearLayout(this).apply { gravity = Gravity.CENTER; orientation = LinearLayout.HORIZONTAL }
+        cards.addView(cardButton("КАМПАНИЯ", "История и выживание") {
+            showInfo("Кампания", "Раздел откроется после интеграции игрового runtime.")
+        }, LinearLayout.LayoutParams(0, 82, 1f).apply { setMargins(3, 0, 3, 0) })
+        cards.addView(cardButton("СОЗДАНИЕ", "Крафт и строительство") {
+            showInfo("Создание", "Игровой интерфейс крафта пока не подключён.")
+        }, LinearLayout.LayoutParams(0, 82, 1f).apply { setMargins(3, 0, 3, 0) })
+        cards.addView(cardButton("МОДЫ", "Управление модификациями") {
+            showInfo("Моды", "Менеджер модов будет добавлен отдельным модулем.")
+        }, LinearLayout.LayoutParams(0, 82, 1f).apply { setMargins(3, 0, 3, 0) })
+        cards.addView(cardButton("НАСТРОЙКИ", "Параметры лаунчера") {
+            showSettings()
+        }, LinearLayout.LayoutParams(0, 82, 1f).apply { setMargins(3, 0, 3, 0) })
+        page.addView(cards)
+        page.addView(label("ВЫБЕРИ ПАПКУ ИГРЫ • ФАЙЛЫ НЕ ИЗМЕНЯЮТСЯ", 10f, Color.LTGRAY).apply {
+            gravity = Gravity.CENTER
+        }, LinearLayout.LayoutParams(-1, 24))
+        setContentView(page)
+    }
+
+    private fun cardButton(title: String, subtitle: String, action: () -> Unit) = Button(this).apply {
+        text = "$title\n$subtitle"
+        textSize = 12f
+        setTextColor(Color.WHITE)
+        isAllCaps = false
+        gravity = Gravity.CENTER
+        background = android.graphics.drawable.GradientDrawable().apply {
+            setColor(Color.argb(220, 18, 18, 18))
+            setStroke(2, Color.rgb(105, 105, 105))
+            cornerRadius = 12f
+        }
+        setOnClickListener { action() }
     }
 
     private fun label(value: String, size: Float, color: Int) = TextView(this).apply {
