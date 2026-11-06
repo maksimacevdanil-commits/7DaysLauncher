@@ -2,10 +2,11 @@
 
 Android launcher prototype for selecting and scanning a locally stored PC game folder.
 
-## Version 0.2.0
+## Version 0.3.0
 - Native Android Kotlin application.
 - Storage Access Framework folder picker with persistent read permission.
 - Recursive scan for Windows EXE and common game data files.
+- Main menu with a visible game-folder picker and status panel.
 - Local launcher.log.
 - GitHub Actions debug APK build.
 
